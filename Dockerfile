@@ -1,24 +1,49 @@
-FROM debian:latest
-MAINTEAINER Akel <akel@domain.tld>
+FROM debian:7.9
+MAINTEINER Akel <Akel@domain.tld>
 
-RUN /etc/init.d/dhcpv6_hack.sh
-RUN /etc/init.d/ssh_key_hack.sh
 RUN apt-get -y update
-RUN apt-get -y upgrade
-RUN apt-get -y --force-yes install autoconf automake build-essential libass-dev libfreetype6-dev libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev pkg-config texinfo libx264-dev libmp3lame-dev cmake mercurial zlib1g-dev yasm nano mc libopus-dev cmake mercurial ; true
+RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev avconv
 
-COPY ffmpeg_compile.sh /usr/local/src/ffmpeg_compile.sh
-COPY nginx_configure.sh /usr/local/src/nginx_configure.sh
-COPY generate_nginx_template.sh /usr/local/src/generate_nginx_template.sh
-COPY entrypoint.sh /root/entrypoint.sh
+RUN groupadd nginx
+RUN useradd -g nginx nginx
 
-RUN chmod +x /usr/local/src/ffmpeg_compile.sh
-RUN chmod +x /usr/local/src/nginx_configure.sh
-RUN chmod +x /usr/local/src/generate_nginx_template.sh
-RUN chmod +x /root/entrypoint.sh
+RUN wget -O /usr/local/src/nginx.tar.gz http://nginx.org/download/nginx-1.6.3.tar.gz
+RUN wget -O /usr/local/src/nginx-rtmp-module.zip https://github.com/arut/nginx-rtmp-module/archive/master.zip
+RUN cd /usr/local/src && tar -xzvf nginx-1.6.3.tar.gz
+RUN cd /usr/local/src && unzip master.zip
+RUN cd /usr/local/src/nginx-1.6.3 && ./configure \
+        --prefix=/etc/nginx \
+        --sbin-path=/usr/sbin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --http-log-path=/var/log/nginx/access.log \
+        --pid-path=/var/run/nginx.pid \
+        --lock-path=/var/run/nginx.lock \
+        --http-client-body-temp-path=/var/cache/nginx/client_temp \
+        --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+        --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+        --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+        --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+        --user=nginx \
+        --group=nginx \
+        --with-http_ssl_module \
+        --with-http_realip_module \
+        --with-http_addition_module \
+        --with-http_sub_module \
+        --with-http_dav_module \
+        --with-http_flv_module \
+        --with-http_mp4_module \
+        --with-http_gunzip_module \
+        --with-http_gzip_static_module \
+        --with-http_random_index_module \
+        --with-http_secure_link_module \
+        --with-http_stub_status_module \
+        --with-http_auth_request_module \
+        --with-mail \
+        --with-mail_ssl_module \
+        --with-file-aio \
+        --add-module=/usr/local/src/nginx-rtmp-module-master \
+        --with-ipv6
+RUN cd /usr/local/src/nginx-1.6.3 && make -j4 && make install ;
 
-RUN /usr/local/src/ffmpeg_compile.sh
-RUN /usr/local/src/nginx_configure.sh
-RUN /usr/local/src/generate_nginx_template.sh
-
-ENTRYPOINT /root/entrypoint.sh
+EXPOSE 80,1935
