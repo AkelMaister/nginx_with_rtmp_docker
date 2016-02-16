@@ -9,7 +9,7 @@ WORKDIR /usr/local/src
 RUN wget -O /usr/local/src/nginx.tar.gz http://nginx.org/download/nginx-1.9.9.tar.gz
 RUN wget --no-check-certificate -O /usr/local/src/nginx-rtmp-module.zip https://github.com/arut/nginx-rtmp-module/archive/master.zip
 
-RUN tar -xzvf /usr/local/src/nginx-1.9.9.tar.gz
+RUN tar -xzvf /usr/local/src/nginx.tar.gz
 RUN unzip /usr/local/src/master.zip
 
 WORKDIR /usr/local/src/nginx-1.9.9
