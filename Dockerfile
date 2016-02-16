@@ -1,5 +1,5 @@
 FROM debian:7.9
-MAINTEINER Akel <Akel@domain.tld>
+MAINTAINER Akel <Akel@domain.tld>
 
 RUN apt-get -y update
 RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev avconv
