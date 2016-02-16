@@ -46,4 +46,4 @@ RUN cd /usr/local/src/nginx-1.6.3 && ./configure \
         --with-ipv6
 RUN cd /usr/local/src/nginx-1.6.3 && make -j4 && make install ;
 
-EXPOSE 80,1935
+EXPOSE 80 1935
