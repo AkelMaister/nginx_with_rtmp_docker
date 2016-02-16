@@ -2,16 +2,19 @@ FROM debian:7.9
 MAINTAINER Akel <Akel@domain.tld>
 
 RUN apt-get -y update
-RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev avconv
+RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev
 
-RUN groupadd nginx
-RUN useradd -g nginx nginx
+WORKDIR /usr/local/src
 
-RUN wget -O /usr/local/src/nginx.tar.gz http://nginx.org/download/nginx-1.6.3.tar.gz
+RUN wget -O /usr/local/src/nginx.tar.gz http://nginx.org/download/nginx-1.9.9.tar.gz
 RUN wget -O /usr/local/src/nginx-rtmp-module.zip https://github.com/arut/nginx-rtmp-module/archive/master.zip
-RUN cd /usr/local/src && tar -xzvf nginx-1.6.3.tar.gz
-RUN cd /usr/local/src && unzip master.zip
-RUN cd /usr/local/src/nginx-1.6.3 && ./configure \
+
+RUN tar -xzvf nginx-1.9.9.tar.gz
+RUN unzip master.zip
+
+WORKDIR /usr/local/src/nginx-1.9.9
+
+RUN ./configure \
         --prefix=/etc/nginx \
         --sbin-path=/usr/sbin/nginx \
         --conf-path=/etc/nginx/nginx.conf \
@@ -19,13 +22,8 @@ RUN cd /usr/local/src/nginx-1.6.3 && ./configure \
         --http-log-path=/var/log/nginx/access.log \
         --pid-path=/var/run/nginx.pid \
         --lock-path=/var/run/nginx.lock \
-        --http-client-body-temp-path=/var/cache/nginx/client_temp \
-        --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
-        --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
-        --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
-        --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
-        --user=nginx \
-        --group=nginx \
+        --user=root \
+        --group=root \
         --with-http_ssl_module \
         --with-http_realip_module \
         --with-http_addition_module \
@@ -44,6 +42,6 @@ RUN cd /usr/local/src/nginx-1.6.3 && ./configure \
         --with-file-aio \
         --add-module=/usr/local/src/nginx-rtmp-module-master \
         --with-ipv6
-RUN cd /usr/local/src/nginx-1.6.3 && make -j4 && make install ;
+RUN make -j4 && make install
 
 EXPOSE 80 1935
