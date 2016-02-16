@@ -2,7 +2,7 @@ FROM debian:7.9
 MAINTAINER Akel <Akel@domain.tld>
 
 RUN apt-get -y update
-RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev
+RUN apt-get -y install ffmpeg gcc libpcre3-dev libssl-dev wget nano
 
 WORKDIR /usr/local/src
 
