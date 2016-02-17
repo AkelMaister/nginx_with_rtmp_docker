@@ -45,3 +45,5 @@ RUN ./configure \
 RUN make -j4 && make install
 
 EXPOSE 80 1935
+
+ENTRYPOINT /usr/sbin/nginx
