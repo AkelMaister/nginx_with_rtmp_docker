@@ -44,6 +44,8 @@ RUN ./configure \
         --with-ipv6
 RUN make -j4 && make install
 
+COPY templates/nginx.conf /etc/nginx/nginx.conf
+
 EXPOSE 80 1935
 
 ENTRYPOINT /usr/sbin/nginx
