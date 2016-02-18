@@ -1,6 +1,8 @@
 FROM debian:7.9
 MAINTAINER Akel <Akel@domain.tld>
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get -y update
 RUN apt-get -y install build-essential ffmpeg gcc libpcre3-dev libssl-dev wget nano mc
 
@@ -45,6 +47,10 @@ RUN ./configure \
 RUN make -j4 && make install
 
 COPY templates/nginx.conf /etc/nginx/nginx.conf
+
+ENV HOME /root
+
+WORKDIR /root
 
 EXPOSE 80 1935
 
