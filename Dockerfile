@@ -1,4 +1,4 @@
-FROM debian:7.9
+FROM eboraas/debian:wheezy
 MAINTAINER Akel <Akel@domain.tld>
 
 ENV DEBIAN_FRONTEND noninteractive
