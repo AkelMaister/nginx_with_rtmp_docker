@@ -47,6 +47,9 @@ RUN ./configure \
 RUN make -j4 && make install
 
 COPY templates/nginx.conf /etc/nginx/nginx.conf
+COPY start.sh /root/start.sh
+
+RUN chmod +x /root/start.sh
 
 ENV HOME /root
 
@@ -54,4 +57,4 @@ WORKDIR /root
 
 EXPOSE 80 1935
 
-ENTRYPOINT /usr/sbin/nginx
+ENTRYPOINT ["/root/start.sh"]
