@@ -6,7 +6,7 @@ Live streaming and transcoding video server
 
 ### Exaple
 ```
-docker -i -t run akel/nginx_with_rtmp_docker
+docker run -i -t akel/nginx_with_rtmp_docker
 ```
 
 ### Publish URL
